@@ -1,0 +1,9 @@
+This program is written using PyChard for Windows.
+
+A Linux version will be coming once I get a Computer Fixit Guy resolve my issue with RAID verses ACHI
+
+The main map is encoded into a class for each coordinate on the map.
+Each cell class holds information like the neighboring cells and of what type they are and the type of each neighboring
+cell - like . , ~ , O, X, U  for each of the N, S, E, W possible moves.
+
+I had started putting a doubly linked list for back-tracking of the robot but didn't have time to finish it.
