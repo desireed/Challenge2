@@ -1,6 +1,12 @@
 # main.py
+
+''' Author: Christine Desire Davis
+    Date: 21 Mar 2021
+'''
+
 '''Must have pip install parameterixed import installed
     and pytest & pytest-html '''
+
 
 
 
