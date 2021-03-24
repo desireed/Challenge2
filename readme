@@ -1,4 +1,4 @@
-This program is written using PyChard for Windows.
+This program is written using PyCharm for Windows.
 
 The main map is encoded into a class for each coordinate on the map.
 Each cell class holds information like the neighboring cells and of what type they are and the type of each neighboring
@@ -13,3 +13,5 @@ To execute the tests on Windows:
 python  -m unittest discover -s "C:\Users\desir\Documents\GitHub\challenge2\challenge2\tests\unit"
                              -t "C:\Users\desir\Documents\GitHub\challenge2\challenge2"
                              -p "Test_*.py"
+
+                             
