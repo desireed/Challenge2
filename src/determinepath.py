@@ -1,4 +1,11 @@
-# determinepath.py
+#!/usr/bin/env python3
+
+'''
+    Name: determinepath.py
+    Author: Christine Desire Davis
+    Date: 11 Mar 2021
+'''
+
 
 import random
 import sys

@@ -1,37 +1,50 @@
-# pparseargs.py
+#!/usr/bin/env python3
 
-import argparse
+'''
+    Name: parseargs.py
+    Author: Christine Desire Davis
+    Date: 11 Mar 2021
+'''
+
+import os
 import sys
+import platform
+import argparse
+import src.globals
 
-input_map_filename = ''
+ROOT_DIR = ''
 
-parser = argparse.ArgumentParser(
-    prog='Determine Robot Path',
-    description='''this description was indented weird but that is okay''',
-    epilog='''
-            likewise for this epilog whose whitespace will
-        be cleaned up and whose words will be wrapped
-        across a couple lines''')
+def parse_the_command_line_attributes():
 
-
-def parse_the_command_line_attrubutes():
-
-    my_parser = argparse.ArgumentParser(description='Determine shortest path for robot to its destination')
-    my_parser.add_argument('--inputfilename', dest='input_file_name', action='store', required=True,
+    my_parser = argparse.ArgumentParser(
+        prog='Determine Robot Path',
+        description=''' Program to move a robot from start to power outlets in least amount of time. ''')
+    my_parser.add_argument('-i', dest='input_file_name', action='store', required=True,
                             help='Enter the input map file name.')
-    args = parser.parse_args()
+    my_parser.add_argument('-pc', dest='pycharm', help='Run the program in pycharm.', action='store_true')
+
+    args = my_parser.parse_args()
     print(vars(args))
 
-    my_parser.parse_args(['--inputfilename3'])
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    ROOT_DIR = ROOT_DIR.replace('\src', '')
 
-    if args.inputfilename:
-        input_map_filename = args.inputfilename
+    if args.pycharm:
+        src.globals.run_in_pycharm = True
+
+    if args.input_file_name:
+        if src.globals.run_in_pycharm:
+            src.globals.input_map_filename = ROOT_DIR + r'/input/' + args.input_file_name
+        else:
+            src.globals.input_map_filename = ROOT_DIR + r'/input/' + args.input_file_name
     else:
-        print('Error, no map filename exists')
+        print('ERROR, no map filename exists')
         sys.exit()
 
-
+    print("OS = '{}'".format(platform.system()))
+    print("RootDir = '{}'".format(ROOT_DIR))
+    print("input_map_filename", src.globals.input_map_filename)
 
 if __name__ == '__main__':
-    parse_the_command_line_attrubutes()
-    print("input_map_filename", input_map_filename)
+    parse_the_command_line_attributes()
+    print("input_map_filename", src.globals.input_map_filename)

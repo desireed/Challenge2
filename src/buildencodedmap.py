@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+
+'''
+    Name: buildencodedmap.py
+    Author: Christine Desire Davis
+    Date: 11 Mar 2021
+'''
+
 # buildencodedmap.py
 
 from collections import namedtuple
@@ -24,8 +32,7 @@ class data_single_cell:
 
 
 def build_encoded_map(input_file):
-
-    # Get the map from the input file
+    '''Get the map from the input file'''
     try:
         with open(input_file) as inf:
             lines = inf.readlines()
@@ -39,6 +46,7 @@ def build_encoded_map(input_file):
             src.globals.X_SIZE = len(line)
             src.globals.Y_SIZE = len(linesfixed)
 
+            global field_matrix
             field_matrix = [['0' for x in range(0, src.globals.Y_SIZE)] for y in range(0, src.globals.X_SIZE)]
 
             while j < src.globals.Y_SIZE:
@@ -46,6 +54,9 @@ def build_encoded_map(input_file):
                 line = linesfixed[j]
                 src.globals.Y_SIZE = len(linesfixed)
                 src.globals.X_SIZE = len(line)
+                if src.globals.Y_SIZE < 3 | src.globals.X_SIZE < 3:
+                    print("ERROR - INCORRECT MAP SIZE")
+                    raise ValueError
                 while i < src.globals.X_SIZE:
                     field_matrix[i][j] = line[i]
                     i += 1
@@ -63,8 +74,11 @@ def build_encoded_map(input_file):
         print("Unexpected error:", sys.exc_info()[0])
         raise
 
+def determine_neighboring_cell_type():
+
     cell = namedtuple('direction', ['location', 'cell_type', 'valid', 'time_step', 'final'])
 
+    global matrix_size
     matrix_size = src.globals.xy_namedtuple(src.globals.X_SIZE, src.globals.Y_SIZE)
 
     # Index over all cells from the input map matrix that hold the maps cell types.
@@ -82,6 +96,7 @@ def build_encoded_map(input_file):
             c.x = cell_x
             c.y = cell_y
             c.xy_key = (str(cell_x) + str(cell_y))
+            global field_matrix
             c.cell_type = field_matrix[cell_x][cell_y] # get the single cell object type of master map of cell symbols
 
             # set beginning of the doubly linked list to current cell in to be cell_dictionary
@@ -90,6 +105,7 @@ def build_encoded_map(input_file):
                 c.head_of_chain_cell = c.xy_key  # cell where the robot starts at
                 c.header_prev_cell = None
                 src.globals.current_location_of_robot = c.xy_key
+                src.globals.original_robot_location = src.globals.current_location_of_robot
                 robot_found = True
 
             # Build list of power outlets from the map
@@ -137,9 +153,6 @@ def build_encoded_map(input_file):
 
             # add cell_time_to_enter the class data_single_cell valid path
             if c.cell_type == '.':  c.cell_time_to_enter = 1
-            # if c.cell_type == 'O':  c.cell_time_to_enter = 1
-            # if c.cell_type == '~':  c.cell_time_to_enter = 3
-
 
             # update a single cell class entry of class c (data)
             c.E = E
@@ -147,9 +160,21 @@ def build_encoded_map(input_file):
             c.N = N
             c.S = S
 
-            # add new class to dictionary
+            # add new class cell to dictionary
             src.globals.cell_dictionary[c.xy_key] = c
 
+    determine_if_trapped_power_outlet()
+
+    print_neighboring_cell_information()
+
+    if not robot_found:
+        assert 'ERROR: No robot found in map.'
+
+    if src.globals.list_of_power_outlets is None:
+        assert 'ERROR: No power outlets found in map.'
+
+
+def determine_if_trapped_power_outlet():
     # After the list of power outlets have been collected
     # remove any power outlet that is trapped by an X or U on all sides N,S,E,W
     to_remove = []
@@ -164,21 +189,19 @@ def build_encoded_map(input_file):
     for i in range(len(to_remove)):
         src.globals.list_of_power_outlets.remove(to_remove[i])
         removed = (to_remove[i])
-        print('Removed invalid "O" location {} because it is trapped on NSEW directions.'.format(to_remove[i]))
+        print('NOTE: Removed invalid "O" location {} because it is trapped on NSEW directions.'.format(to_remove[i]))
+
+
+def print_neighboring_cell_information():
+    ''' print neighboring cell information '''
+
+    global matrix_size
 
     for y in range(matrix_size.y):
         for x in range(matrix_size.x):
             cc = src.globals.cell_dictionary[str(x) + str(y)]
-            print(cc.x, cc.y, cc.cell_type)
-            print('\t' + 'N= ' + cc.N.cell_type + '  ' + cc.N.location)
-            print('\t' + 'S= ' + cc.S.cell_type + '  ' + cc.S.location)
-            print('\t' + 'E= ' + cc.E.cell_type + '  ' + cc.E.location)
-            print('\t' + 'W= ' + cc.W.cell_type + '  ' + cc.W.location)
-
-    if src.globals.list_of_power_outlets is None:
-        assert('ERROR: No power outlets found in map.')
-        raise
-
-    if not robot_found:
-        assert('ERROR: No robot found in map.')
-        raise
+            print('{} {} {}'.format(cc.x, cc.y, cc.cell_type), flush=True)
+            print('\t' + 'N= ' + cc.N.cell_type + '  ' + cc.N.location, flush=True)
+            print('\t' + 'S= ' + cc.S.cell_type + '  ' + cc.S.location, flush=True)
+            print('\t' + 'E= ' + cc.E.cell_type + '  ' + cc.E.location, flush=True)
+            print('\t' + 'W= ' + cc.W.cell_type + '  ' + cc.W.location, flush=True)

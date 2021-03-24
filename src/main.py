@@ -1,22 +1,19 @@
-# main.py
+#!/usr/bin/env python3
 
-''' Author: Christine Desire Davis
-    Date: 21 Mar 2021
 '''
-
-'''Must have pip install parameterixed import installed
-    and pytest & pytest-html '''
-
-
+    Name: main.py
+    Author: Christine Desire Davis
+    Date: 11 Mar 2021
+'''
 
 
 from collections import defaultdict
 from collections import namedtuple
-import argparse
 import sys
 import time
 import src.globals
 import src.buildencodedmap
+import src.parseargs
 from src.determinepath import *
 
 number_epochs = 0
@@ -29,32 +26,21 @@ power_dictionary_statistics = defaultdict(list)
 
 def report_statistics():
     ''' Report the lowest time entries for each power outlet. '''
-    # print(power_dictionary_statistics)
     for key, value in power_dictionary_statistics.items():
         sorted_values = sorted(value)
         #print('KEY={}   VALUE= {}'.format(key, sorted_values))
         li = sorted_values[0]
         time = li[0]
-        print("({}, {})".format(key, time))
-
-def parse_the_command_line_attrubutes():
-    ''' Parse the command line for the map file. '''
-    my_parser = argparse.ArgumentParser(
-        prog='Determine Robot Path',
-        description='''Determine shortest path for robot to its destinations.''')
-
-    my_parser.add_argument('-i', required=True, dest='input_file_name', action='store',
-                            help='Enter the input map file name.')
-    args = my_parser.parse_args()
-    return args.input_file_name
+        print("Power Outlet Cell= ({}, TIME= {})".format(key, time), flush=True)
 
 
 def main_program():
-    input_map_file = parse_the_command_line_attrubutes()
+    src.parseargs.parse_the_command_line_attributes()
 
     epochs_completed = False
 
-    build_encoded_map(r'../input/' + input_map_file)
+    build_encoded_map(src.globals.input_map_filename)
+    determine_neighboring_cell_type()
 
     while not epochs_completed:
         global number_epochs
@@ -62,6 +48,8 @@ def main_program():
         src.globals.path_time = 0
         src.globals.length_of_chain = 0
         path_length = 0
+        src.globals.current_location_of_robot = src.globals.original_robot_location
+
         while True: # not simulation_run_completed:
             number_epochs += 1
             path_length += 1
@@ -82,7 +70,7 @@ def main_program():
                 print("Max Number Path Lenghts met", flush=True)
                 break
 
-        if epochs_completed: # | globals.simulation_completed_valid  | path_length == max_path_length:
+        if epochs_completed:
             epochs_completed = True
 
     report_statistics()

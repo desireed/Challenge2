@@ -1,0 +1,15 @@
+This program is written using PyChard for Windows.
+
+The main map is encoded into a class for each coordinate on the map.
+Each cell class holds information like the neighboring cells and of what type they are and the type of each neighboring
+cell - like . , ~ , O, X, U  for each of the N, S, E, W possible moves.
+
+I had started putting a doubly linked list for back-tracking of the robot but didn't have time to finish it.
+
+To invoke to program, cd to the root directory of the project and enter:
+    python  src/main.py -i 0.txt
+
+To execute the tests on Windows:
+python  -m unittest discover -s "C:\Users\desir\Documents\GitHub\challenge2\challenge2\tests\unit"
+                             -t "C:\Users\desir\Documents\GitHub\challenge2\challenge2"
+                             -p "Test_*.py"
