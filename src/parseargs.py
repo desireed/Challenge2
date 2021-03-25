@@ -27,16 +27,16 @@ def parse_the_command_line_attributes():
     print(vars(args))
 
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-    ROOT_DIR = ROOT_DIR.replace('\src', '')
+    ROOT_DIR = ROOT_DIR.replace('src', '')
 
     if args.pycharm:
         src.globals.run_in_pycharm = True
 
     if args.input_file_name:
         if src.globals.run_in_pycharm:
-            src.globals.input_map_filename = ROOT_DIR + r'/input/' + args.input_file_name
+            src.globals.input_map_filename = ROOT_DIR + r'input/' + args.input_file_name
         else:
-            src.globals.input_map_filename = ROOT_DIR + r'/input/' + args.input_file_name
+            src.globals.input_map_filename = ROOT_DIR + r'input/' + args.input_file_name
     else:
         print('ERROR, no map filename exists')
         sys.exit()

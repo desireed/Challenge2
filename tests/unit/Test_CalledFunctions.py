@@ -29,7 +29,7 @@ class Test_ListOfPowerOutlets(tests.unit.Fixture.Fixture):
         expect_list_of_power_outlets = ['02', '34']
 
         root_dir = os.path.dirname(os.path.abspath(__file__))
-        input_map = root_dir + r'\\..\\..\\input\\' + r'0.txt'
+        input_map = root_dir + r'/../../input/' + r'0.txt'
 
         src.buildencodedmap.build_encoded_map(input_map)
         src.buildencodedmap.determine_neighboring_cell_type()

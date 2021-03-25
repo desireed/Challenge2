@@ -2,16 +2,27 @@ This program is written using PyCharm for Windows.
 
 The main map is encoded into a class for each coordinate on the map.
 Each cell class holds information like the neighboring cells and of what type they are and the type of each neighboring
-cell - like . , ~ , O, X, U  for each of the N, S, E, W possible moves.
+cell - like . , ~ , O, X, U  for each of the N, S, E, W possible moves.  I refer to 'O' as a power outlet.
 
-I had started putting a doubly linked list for back-tracking of the robot but didn't have time to finish it.
+NOTE: The unittests are hooked hardcoded to test 0.txt.
 
-To invoke to program, cd to the root directory of the project and enter:
+To invoke the program on windows, cd to the root directory of the project and enter:
     python  src/main.py -i 0.txt
 
 To execute the tests on Windows:
-python  -m unittest discover -s "C:\Users\desir\Documents\GitHub\challenge2\challenge2\tests\unit"
-                             -t "C:\Users\desir\Documents\GitHub\challenge2\challenge2"
-                             -p "Test_*.py"
+    python  -m unittest discover -s "C:\Users\desir\Documents\GitHub\challenge2\challenge2\tests\unit"
+                                 -t "C:\Users\desir\Documents\GitHub\challenge2\challenge2"
+                                 -p "Test_*.py"
 
-                             
+To invoke the main program on Linux, cd to the main root code directory and enter
+    python3 -m src.main -i 0.txt
+
+To execute the unittests on Linux:
+    python3 -m unittest discover -s /home/desiree2/Repositories/challenge2/tests/unit
+                                 -t /home/desiree2/Repositories/challenge2
+                                 "Test_*.py"
+
+NOTE: There is one unittest in Test_CalledFunctions.py: Test_ListOfPowerOutlets which fails on
+both Windows & Linux command line only, but passes in PyCharm on Windows & Linux. I don't know why yet.
+
+I had started putting a doubly linked list for back-tracking of the robot but didn't have time to finish it.
